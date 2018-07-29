@@ -22,9 +22,9 @@ namespace rwLock {
         d_endPoint = system_clock::now();
     }
 
-    int64_t StopWatch::ellipseInSeconds() const {
+    int64_t StopWatch::ellipseInMs() const {
         using namespace std::chrono;
-        seconds d = duration_cast<std::chrono::seconds>(d_endPoint - d_startPoint);
+        milliseconds d = duration_cast<milliseconds>(d_endPoint - d_startPoint);
         return d.count();
     }
 }

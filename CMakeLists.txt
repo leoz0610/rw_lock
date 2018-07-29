@@ -3,7 +3,7 @@ project(rw_lock)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES test_cache.cpp test_cache.h workers.cpp workers.h utils/stop_watch.cpp utils/stop_watch.h)
+set(SOURCE_FILES cache.cpp cache.h test_cache.cpp test_cache.h workers.cpp workers.h utils/stop_watch.cpp utils/stop_watch.h)
 add_executable(rw_lock main.cpp ${SOURCE_FILES})
 
 

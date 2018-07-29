@@ -5,12 +5,14 @@
 #ifndef RW_LOCK_WORKERS_H
 #define RW_LOCK_WORKERS_H
 
-#include "test_cache.h"
+#include "cache.h"
 
 namespace rwLock {
-    void read(const TestCache& cache);
+    void read(const Cache& cache);
 
-    void write(TestCache& cache);
+    void write(Cache& cache);
+
+    void runTestCache();
 }
 
 #endif //RW_LOCK_WORKERS_H

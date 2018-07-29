@@ -19,6 +19,7 @@ namespace rwLock {
         std::this_thread::sleep_for(seconds(1));
         watch.stop();
 
-        EXPECT_GE(1, watch.ellipseInSeconds());
+        const double eps = 10;
+        EXPECT_TRUE(abs(1000 - watch.ellipseInMs()) < eps);
     }
 }

@@ -20,7 +20,7 @@ namespace rwLock {
         void start();
         void stop();
 
-        int64_t ellipseInSeconds() const;
+        int64_t ellipseInMs() const;
 
     private:
         typedef std::chrono::time_point<std::chrono::system_clock> SystemTimePoint;

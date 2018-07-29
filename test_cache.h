@@ -8,14 +8,16 @@
 #include <vector>
 #include <iostream>
 
+#include "cache.h"
+
 namespace rwLock {
 
-    class TestCache {
+    class TestCache : public Cache {
     public:
         TestCache();
 
-        void get(int* a, int *b) const;
-        void set(int a, int b);
+        void get(int* a, int *b) const override;
+        void set(int a, int b) override;
 
     private:
         int d_a;

@@ -8,7 +8,8 @@
 namespace rwLock {
 
     TestCache::TestCache()
-    : d_a(0),
+    : Cache(),
+      d_a(0),
       d_b(0)
     {}
 
