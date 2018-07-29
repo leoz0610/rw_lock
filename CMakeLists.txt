@@ -3,8 +3,8 @@ project(rw_lock)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES main.cpp test_cache.cpp test_cache.h workers.cpp workers.h utils/stop_watch.cpp utils/stop_watch.h)
-add_executable(rw_lock ${SOURCE_FILES})
+set(SOURCE_FILES test_cache.cpp test_cache.h workers.cpp workers.h utils/stop_watch.cpp utils/stop_watch.h)
+add_executable(rw_lock main.cpp ${SOURCE_FILES})
 
 
 # Download and unpack googletest at configure time
@@ -40,6 +40,7 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
 endif()
 
 # Now simply link against gtest or gtest_main as needed. Eg
-add_executable(RWLockUnitTests utils/stop_watch.cpp unit_tests/stop_watch.t.cpp)
+set(UNITTESTS_SOURCE_FILES unit_tests/stop_watch.t.cpp unit_tests/test_cache.t.cpp)
+add_executable(RWLockUnitTests ${SOURCE_FILES} ${UNITTESTS_SOURCE_FILES})
 target_link_libraries(RWLockUnitTests gtest_main)
 add_test(NAME RWLockUnitTests COMMAND RWLockUnitTests)
