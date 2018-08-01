@@ -14,7 +14,7 @@
 
 namespace rwLock {
 
-    void read(std::shared_ptr<const Cache> cache) {
+    void read(std::shared_ptr<const Cache> cache, std::shared_ptr<std::atomic<int>> count) {
         static const size_t max_times(1000);
 
         size_t times(0);
@@ -24,9 +24,10 @@ namespace rwLock {
             cache->get(&a, &b);
             ++times;
         }
+        ++*count;
     }
 
-    void write(std::shared_ptr<Cache> cache) {
+    void write(std::shared_ptr<Cache> cache, std::shared_ptr<std::atomic<int>> count) {
         static std::default_random_engine gen;
         static std::uniform_int_distribution<int> dist(0, 99);
         static const size_t max_times(1000);
@@ -37,6 +38,7 @@ namespace rwLock {
             cache->set(value, value);
             ++times;
         }
+        ++*count;
     }
 
     void runCache(std::shared_ptr<Cache> cache, const std::string& label) {
@@ -45,18 +47,19 @@ namespace rwLock {
 
         StopWatch watch;
         watch.start();
+        std::shared_ptr<std::atomic<int>> count(new std::atomic<int>(0));
         for (size_t i = 0; i < 10; ++i) {
-            rThreads.emplace_back(std::bind(read, cache));
+            rThreads.emplace_back(std::bind(read, cache, count));
+            rThreads[i].detach();
+
             if (i < 5) {
-                wThreads.emplace_back(std::bind(write, cache));
+                wThreads.emplace_back(std::bind(write, cache, count));
+                wThreads[i].detach();
             }
         }
 
-        for (size_t i = 0; i < 10; ++i) {
-            rThreads[i].join();
-        }
-        for (size_t i = 0; i < 5; ++i) {
-            wThreads[i].join();
+        while (*count < 15) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
         watch.stop();
 

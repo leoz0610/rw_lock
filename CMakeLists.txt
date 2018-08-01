@@ -3,7 +3,7 @@ project(rw_lock)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES cache.cpp cache.h test_cache.cpp test_cache.h workers.cpp workers.h utils/stop_watch.cpp utils/stop_watch.h mutex_cache.cpp mutex_cache.h)
+set(SOURCE_FILES cache.cpp cache.h test_cache.cpp test_cache.h workers.cpp workers.h utils/stop_watch.cpp utils/stop_watch.h mutex_cache.cpp mutex_cache.h rwlock.cpp rwlock.h)
 add_executable(rw_lock main.cpp ${SOURCE_FILES})
 
 
@@ -40,7 +40,7 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
 endif()
 
 # Now simply link against gtest or gtest_main as needed. Eg
-set(UNITTESTS_SOURCE_FILES unit_tests/stop_watch.t.cpp unit_tests/test_cache.t.cpp unit_tests/mutex_cache.t.cpp)
+set(UNITTESTS_SOURCE_FILES unit_tests/stop_watch.t.cpp unit_tests/test_cache.t.cpp unit_tests/mutex_cache.t.cpp unit_tests/rwlock.t.cpp)
 add_executable(RWLockUnitTests ${SOURCE_FILES} ${UNITTESTS_SOURCE_FILES})
 target_link_libraries(RWLockUnitTests gtest_main)
 add_test(NAME RWLockUnitTests COMMAND RWLockUnitTests)

@@ -7,6 +7,7 @@
 
 #include <mutex>
 #include <iostream>
+#include <thread>
 
 #include "cache.h"
 
@@ -29,6 +30,7 @@ namespace rwLock {
     void MutexCache::get(int *a, int *b) const {
         std::lock_guard<std::mutex> guard(d_mutex);
         *a = d_a;
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
         *b = d_b;
         std::cout << "get a=" << *a << " b=" << *b << std::endl;
     }
@@ -37,6 +39,7 @@ namespace rwLock {
     void MutexCache::set(int a, int b) {
         std::lock_guard<std::mutex> guard(d_mutex);
         d_a = a;
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
         d_b = b;
         std::cout << "set d_a=" << d_a << " d_b=" << d_b << std::endl;
     }

@@ -10,7 +10,8 @@ namespace rwLock {
     TestCache::TestCache()
     : Cache(),
       d_a(0),
-      d_b(0)
+      d_b(0),
+      d_mutex()
     {}
 
 }
