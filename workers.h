@@ -9,15 +9,17 @@
 #include "cache.h"
 
 namespace rwLock {
-    void read(std::shared_ptr<const Cache> cache, std::shared_ptr<std::atomic<int>> count);
+    void read(std::shared_ptr<const Cache> cache);
 
-    void write(std::shared_ptr<Cache> cache, std::shared_ptr<std::atomic<int>> count);
+    void write(std::shared_ptr<Cache> cache);
 
     void runCache(std::shared_ptr<Cache> cache, const std::string& label);
 
     void runTestCache();
 
     void runMutexCache();
+    
+    void runRwLockCache();
 }
 
 #endif //RW_LOCK_WORKERS_H

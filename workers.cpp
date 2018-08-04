@@ -10,11 +10,12 @@
 #include "utils/stop_watch.h"
 #include "test_cache.h"
 #include "mutex_cache.h"
+#include "rwlock_cache.h"
 
 
 namespace rwLock {
 
-    void read(std::shared_ptr<const Cache> cache, std::shared_ptr<std::atomic<int>> count) {
+    void read(std::shared_ptr<const Cache> cache) {
         static const size_t max_times(1000);
 
         size_t times(0);
@@ -24,10 +25,9 @@ namespace rwLock {
             cache->get(&a, &b);
             ++times;
         }
-        ++*count;
     }
 
-    void write(std::shared_ptr<Cache> cache, std::shared_ptr<std::atomic<int>> count) {
+    void write(std::shared_ptr<Cache> cache) {
         static std::default_random_engine gen;
         static std::uniform_int_distribution<int> dist(0, 99);
         static const size_t max_times(1000);
@@ -37,8 +37,8 @@ namespace rwLock {
             int value = dist(gen);
             cache->set(value, value);
             ++times;
+            std::this_thread::sleep_for(std::chrono::milliseconds(5));
         }
-        ++*count;
     }
 
     void runCache(std::shared_ptr<Cache> cache, const std::string& label) {
@@ -47,20 +47,16 @@ namespace rwLock {
 
         StopWatch watch;
         watch.start();
-        std::shared_ptr<std::atomic<int>> count(new std::atomic<int>(0));
         for (size_t i = 0; i < 10; ++i) {
-            rThreads.emplace_back(std::bind(read, cache, count));
-            rThreads[i].detach();
+            rThreads.emplace_back(std::bind(read, cache));
 
             if (i < 5) {
-                wThreads.emplace_back(std::bind(write, cache, count));
-                wThreads[i].detach();
+                wThreads.emplace_back(std::bind(write, cache));
             }
         }
 
-        while (*count < 15) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        }
+        std::for_each(rThreads.begin(), rThreads.end(), [&](std::thread& t) { t.join(); });
+        std::for_each(wThreads.begin(), wThreads.end(), [&](std::thread& t) { t.join(); });
         watch.stop();
 
         std::cout << label << " process time " << watch.ellipseInMs() / 1000.0 << " second(s)" << std::endl;
@@ -76,5 +72,11 @@ namespace rwLock {
         std::shared_ptr<Cache> cache(new MutexCache());
 
         runCache(cache, "mutexCache");
+    }
+
+    void runRwLockCache() {
+        std::shared_ptr<Cache> cache(new RwLockCache());
+
+        runCache(cache, "rwLockCache");
     }
 }

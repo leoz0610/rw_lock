@@ -7,7 +7,8 @@ using namespace rwLock;
 int main() {
 
     //runMutexCache();
-    runTestCache();
+    //runTestCache();
+    runRwLockCache();
 
     return 0;
 }
